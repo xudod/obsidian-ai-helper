@@ -1,0 +1,11 @@
+{
+  "id": "herdsman-helper",
+  "name": "Herdsman 助手",
+  "version": "1.0.0",
+  "minAppVersion": "0.15.0",
+  "description": "在MD笔记中选中文本后右键发送给本地Herdsman服务，将回复续写在选中内容下方",
+  "author": "拈花赛博行",
+  "authorUrl": "",
+  "isDesktopOnly": false,
+  "fundingUrl": ""
+}
