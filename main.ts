@@ -85,7 +85,7 @@ export default class HerdsmanHelperPlugin extends Plugin {
     // 打开弹窗
     modal.open();
 
-    // 发送请求到 Herdsman（流式响应）
+    // 发送请求到 Herdsman（使用Node.js HTTP模块实现流式响应，避免CORS问题）
     try {
       await this.queryHerdsmanStream(selectedText, (chunk) => {
         modal.updateResponse(chunk);
