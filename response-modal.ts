@@ -1,10 +1,11 @@
-import { App, Modal } from 'obsidian';
+import { App, Modal, Notice } from 'obsidian';
 
 export class HerdsmanResponseModal extends Modal {
   private prompt: string;
   private responseContainer: HTMLElement;
   private cancelButton: HTMLButtonElement;
   private confirmButton: HTMLButtonElement;
+  private copyButton: HTMLButtonElement;
   private loadingIndicator: HTMLElement;
   private isProcessing: boolean = false;
   
@@ -101,6 +102,29 @@ export class HerdsmanResponseModal extends Modal {
     this.cancelButton.style.cursor = 'pointer';
     this.cancelButton.addEventListener('click', () => this.close());
 
+    this.copyButton = buttonContainer.createEl('button', { 
+      text: '复制',
+      cls: 'herdsman-btn herdsman-btn-copy'
+    });
+    this.copyButton.style.background = 'var(--background-modifier-hover)';
+    this.copyButton.style.color = 'var(--text-normal)';
+    this.copyButton.style.border = 'none';
+    this.copyButton.style.borderRadius = '6px';
+    this.copyButton.style.padding = '8px 16px';
+    this.copyButton.style.cursor = 'pointer';
+    this.copyButton.disabled = true;
+    this.copyButton.style.opacity = '0.5';
+    this.copyButton.addEventListener('click', async () => {
+      const responseText = this.responseContainer.textContent || '';
+      try {
+        await navigator.clipboard.writeText(responseText);
+        new Notice('已复制到剪贴板');
+      } catch (err) {
+        console.error('复制失败:', err);
+        new Notice('复制失败');
+      }
+    });
+
     this.confirmButton = buttonContainer.createEl('button', { 
       text: '插入到笔记',
       cls: 'herdsman-btn herdsman-btn-confirm'
@@ -151,9 +175,11 @@ export class HerdsmanResponseModal extends Modal {
     this.responseContainer.textContent += content;
     this.responseContainer.scrollTop = this.responseContainer.scrollHeight;
     
-    // 启用确认按钮
+    // 启用确认和复制按钮
     this.confirmButton.disabled = false;
     this.confirmButton.style.opacity = '1';
+    this.copyButton.disabled = false;
+    this.copyButton.style.opacity = '1';
   }
 
   /**
@@ -186,6 +212,8 @@ export class HerdsmanResponseModal extends Modal {
     
     this.confirmButton.disabled = false;
     this.confirmButton.style.opacity = '1';
+    this.copyButton.disabled = false;
+    this.copyButton.style.opacity = '1';
   }
 
   onClose() {
